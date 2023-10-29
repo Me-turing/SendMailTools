@@ -98,5 +98,22 @@ namespace SendEmail.Util
             }
             return fileDetailsList;
         }
+        
+        /// <summary>
+        /// 启用或禁用当前页面（或窗体）上的所有控件
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="enabled"></param>
+        public static void SetAllControlsEnabled(Control parent, bool enabled)
+        {
+            foreach (Control ctrl in parent.Controls)
+            {
+                ctrl.Enabled = enabled;
+
+                // 如果控件包含子控件，递归调用
+                if (ctrl.Controls.Count > 0)
+                    SetAllControlsEnabled(ctrl, enabled);
+            }
+        }
     }
 }

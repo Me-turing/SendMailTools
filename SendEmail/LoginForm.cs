@@ -24,8 +24,10 @@ namespace SendEmail
        /// </summary>
        /// <param name="sender"></param>
        /// <param name="e"></param>
-        private void loginBtn_Click(object sender, EventArgs e)
+        private async void loginBtn_Click(object sender, EventArgs e)
         {
+            UtilTools.SetAllControlsEnabled(this, false);//禁用控件
+            
             //获取当前输入的用户名和密码
             var userName = this.userNameTextBox.Text;
             var userPwd = this.userPwdTextBox.Text;
@@ -37,6 +39,7 @@ namespace SendEmail
                 String.IsNullOrEmpty(smtpAddress)||String.IsNullOrEmpty(prot))
             {
                 MessageBox.Show("参数不能为空~!");
+                UtilTools.SetAllControlsEnabled(this, true);//启用控件
                 return;
             }
                 
@@ -45,12 +48,14 @@ namespace SendEmail
             if (!isValidPort)
             {
                 MessageBox.Show("请正确输入端口~!");
+                UtilTools.SetAllControlsEnabled(this, true);//启用控件
+                return;
             }
             
             //与指定的邮件服务进行交互
             MailConfig mailConfig = new MailConfig(int.Parse(prot),smtpAddress,userName,userPwd,false);
             SmtpClient smtpClient = mailConfig.getClient();
-            Boolean sendTestEmail = new MailUtils().sendTestEmail(smtpClient,userName);
+            bool sendTestEmail = await Task.Run(() => new MailUtils().sendTestEmail(smtpClient, userName));
             //判断是否登录成功
             if (sendTestEmail)
             {
@@ -67,9 +72,12 @@ namespace SendEmail
                 if (this.MassSendingBtn.Checked)
                 {
                     MessageBox.Show("开发中....");
+                    UtilTools.SetAllControlsEnabled(this, true);//启用控件
+                    return;
                 }
                 else
                 {
+                    UtilTools.SetAllControlsEnabled(this, true);//启用控件
                     new BatchSendingForm(smtpClient,userName).Show();
                 }
                 this.Hide();
@@ -77,6 +85,8 @@ namespace SendEmail
             else
             {
                 MessageBox.Show("请检查输入!");
+                UtilTools.SetAllControlsEnabled(this, true);//启用控件
+                return;
             }
         }
 

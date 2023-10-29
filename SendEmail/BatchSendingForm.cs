@@ -1,9 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.Mail;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -89,13 +88,16 @@ namespace SendEmail
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private  void SendBtn_Click(object sender, EventArgs e)
+        private async void SendBtn_Click(object sender, EventArgs e)
         {
+            UtilTools.SetAllControlsEnabled(this,false);// 禁用控件
+            
             //检查主题不能为空
             var titleText = this.titleTextBox.Text;
             if (string.IsNullOrEmpty(titleText))
             {
                 MessageBox.Show("邮件标题不能为空");
+                UtilTools.SetAllControlsEnabled(this,true);// 启用控件
                 return;
             }
             
@@ -104,6 +106,7 @@ namespace SendEmail
             if (string.IsNullOrEmpty(mailInfoText))
             {
                 MessageBox.Show("邮件内容不能为空");
+                UtilTools.SetAllControlsEnabled(this,true);// 启用控件
                 return;
             }
             
@@ -112,14 +115,14 @@ namespace SendEmail
             if (string.IsNullOrEmpty(toUserAddress)  || addToUserSet.Count==0)
             {
                 MessageBox.Show("收件人不能为空");
+                UtilTools.SetAllControlsEnabled(this,true);// 启用控件
                 return;
             }
             
             //发送邮件,此时无附件
             List<String> addToUserList = addToUserSet.ToList();//获取发送列表
             List<String> addCCUserList = addCCUserSet.ToList();//获取抄送列表
-     
-
+            
             var messageStr = "";
             //判断是否有附件
             if (fileList!=null&&fileList.Count>0)
@@ -141,7 +144,7 @@ namespace SendEmail
                         var attachmentPathList = new List<String>();
                         var attachmentPath = this.pathStr +"\\"+ fileDetails.FileName;
                         attachmentPathList.Add(attachmentPath);
-                        messageStr = new MailUtils().sendEmail(this.smtpClient, message, addToUserList, addCCUserList, attachmentPathList);
+                        messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient, message, addToUserList, addCCUserList, attachmentPathList));
                         if (messageStr!="Success")
                         {
                             MessageBox.Show(messageStr);
@@ -151,7 +154,7 @@ namespace SendEmail
                         else
                         {
                             fileDetails.FileStatus = "OK!";
-                            this.updateListView(fileList);
+                            this.Invoke((MethodInvoker)delegate { this.updateListView(fileList); });    
                         }
                         Thread.Sleep(1000); 
                     }
@@ -166,16 +169,21 @@ namespace SendEmail
                     Subject = this.titleTextBox.Text,
                     Body = this.MailInfoText.Text
                 };
-                
-                messageStr = new MailUtils().sendEmail(this.smtpClient, message, addToUserList, addCCUserList, null);
+                messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient, message, addToUserList, addCCUserList, null));
             }
             
             if (messageStr!="")
             {
                 MessageBox.Show(messageStr);
             }
+            UtilTools.SetAllControlsEnabled(this,true);// 启用控件
         }
 
+        /// <summary>
+        /// 选择附件目录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void selectFileBtn_Click(object sender, EventArgs e)
         {
             //选择指定的文件目录
@@ -199,7 +207,6 @@ namespace SendEmail
         /// <param name="fileList"></param>
         private void updateListView(List<FileDetails> fileList)
         {
-            // this.FileListView.BeginUpdate(); //挂起View防止闪烁
             this.FileListView.Items.Clear(); // 尝试情况现有内容
             for (var i = 0; i < fileList.Count; i++)
             {
@@ -211,12 +218,66 @@ namespace SendEmail
                 lvi.SubItems.Add(fileList[i].FileStatus);
                 this.FileListView.Items.Add(lvi);
             }
-            // this.FileListView.EndUpdate();  //结束数据处理，UI界面一次性绘制。  
         }
 
+        /// <summary>
+        /// 程序退出
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MailInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        /// <summary>
+        /// 删除发送列表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void delToUserListBtn_Click(object sender, EventArgs e)
+        {
+            String inputMailAddress = this.getUserInputEmailAddress();
+            if (!inputMailAddress.Equals(""))
+            {
+                if (addToUserSet.Contains(inputMailAddress))
+                {
+                    addToUserSet.Remove(inputMailAddress);
+                }
+            }
+            this.toUserAddressList.Text = UtilTools.formatMailingList(addToUserSet);
+        }
+
+        /// <summary>
+        /// 删除抄送列表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void delCCUserListBtn_Click(object sender, EventArgs e)
+        {
+            String inputMailAddress = this.getUserInputEmailAddress();
+            if (!inputMailAddress.Equals(""))
+            {
+                if (addCCUserSet.Contains(inputMailAddress))
+                {
+                    addCCUserSet.Remove(inputMailAddress);
+                }
+            }
+            this.ccUserAddressList.Text = UtilTools.formatMailingList(addCCUserSet);
+        }
+
+        /// <summary>
+        /// 页面初始化加载
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void BatchSendingForm_Load(object sender, EventArgs e)
+        {
+            // throw new System.NotImplementedException();
+            
         }
     }
 }

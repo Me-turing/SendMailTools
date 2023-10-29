@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SendEmail.Util
@@ -20,7 +21,7 @@ namespace SendEmail.Util
         /// </summary>
         /// <param name="client">邮件链接</param>
         /// <param name="userAddressStr">收件人地址</param>
-        public Boolean sendTestEmail(SmtpClient client,String userAddressStr)
+        public async Task<Boolean> sendTestEmail(SmtpClient client,String userAddressStr)
         {
             Boolean falg = false;
             if (client==null)
@@ -37,7 +38,7 @@ namespace SendEmail.Util
             List<String> toEmailAddressList = new List<String>();
             toEmailAddressList.Add(userAddressStr);
             var messageStr = sendEmail(client,message, toEmailAddressList, null, null);
-            if (messageStr.Equals("Success"))
+            if (messageStr.Result.Equals("Success"))
             {
                 falg = true;
             }
@@ -53,7 +54,7 @@ namespace SendEmail.Util
         /// <param name="ccEmailAddressList">抄送地址列表</param>
         /// <param name="attachmentPath">附件</param>
         /// <returns></returns>
-        public String sendEmail(SmtpClient client,MailMessage message,List<String> toEmailAddressList,List<String> ccEmailAddressList,List<String> attachmentPath )
+        public async Task<String> sendEmail(SmtpClient client,MailMessage message,List<String> toEmailAddressList,List<String> ccEmailAddressList,List<String> attachmentPath )
         {
             try
             {

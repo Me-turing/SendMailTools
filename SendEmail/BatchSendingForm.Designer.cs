@@ -51,13 +51,15 @@ namespace SendEmail
             this.Status = new System.Windows.Forms.ColumnHeader();
             this.addToUserList = new System.Windows.Forms.Button();
             this.addCCUserList = new System.Windows.Forms.Button();
+            this.delToUserListBtn = new System.Windows.Forms.Button();
+            this.delCCUserListBtn = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // titleTextBox
             // 
             this.titleTextBox.Location = new System.Drawing.Point(198, 6);
             this.titleTextBox.Name = "titleTextBox";
-            this.titleTextBox.Size = new System.Drawing.Size(397, 25);
+            this.titleTextBox.Size = new System.Drawing.Size(414, 25);
             this.titleTextBox.TabIndex = 0;
             // 
             // label1
@@ -81,7 +83,7 @@ namespace SendEmail
             this.toUserAddressList.Location = new System.Drawing.Point(198, 37);
             this.toUserAddressList.Name = "toUserAddressList";
             this.toUserAddressList.ReadOnly = true;
-            this.toUserAddressList.Size = new System.Drawing.Size(336, 25);
+            this.toUserAddressList.Size = new System.Drawing.Size(284, 25);
             this.toUserAddressList.TabIndex = 2;
             // 
             // label3
@@ -97,7 +99,7 @@ namespace SendEmail
             this.ccUserAddressList.Location = new System.Drawing.Point(198, 68);
             this.ccUserAddressList.Name = "ccUserAddressList";
             this.ccUserAddressList.ReadOnly = true;
-            this.ccUserAddressList.Size = new System.Drawing.Size(336, 25);
+            this.ccUserAddressList.Size = new System.Drawing.Size(284, 25);
             this.ccUserAddressList.TabIndex = 4;
             // 
             // SendBtn
@@ -115,7 +117,7 @@ namespace SendEmail
             this.MailInfoText.Location = new System.Drawing.Point(22, 113);
             this.MailInfoText.Multiline = true;
             this.MailInfoText.Name = "MailInfoText";
-            this.MailInfoText.Size = new System.Drawing.Size(574, 276);
+            this.MailInfoText.Size = new System.Drawing.Size(590, 276);
             this.MailInfoText.TabIndex = 7;
             // 
             // FilePathText
@@ -123,7 +125,7 @@ namespace SendEmail
             this.FilePathText.Location = new System.Drawing.Point(101, 410);
             this.FilePathText.Name = "FilePathText";
             this.FilePathText.ReadOnly = true;
-            this.FilePathText.Size = new System.Drawing.Size(400, 25);
+            this.FilePathText.Size = new System.Drawing.Size(417, 25);
             this.FilePathText.TabIndex = 8;
             // 
             // label4
@@ -136,7 +138,7 @@ namespace SendEmail
             // 
             // selectFileBtn
             // 
-            this.selectFileBtn.Location = new System.Drawing.Point(507, 410);
+            this.selectFileBtn.Location = new System.Drawing.Point(524, 409);
             this.selectFileBtn.Name = "selectFileBtn";
             this.selectFileBtn.Size = new System.Drawing.Size(88, 26);
             this.selectFileBtn.TabIndex = 10;
@@ -150,7 +152,7 @@ namespace SendEmail
             this.FileListView.HideSelection = false;
             this.FileListView.Location = new System.Drawing.Point(22, 450);
             this.FileListView.Name = "FileListView";
-            this.FileListView.Size = new System.Drawing.Size(573, 234);
+            this.FileListView.Size = new System.Drawing.Size(590, 234);
             this.FileListView.TabIndex = 11;
             this.FileListView.UseCompatibleStateImageBehavior = false;
             this.FileListView.View = System.Windows.Forms.View.Details;
@@ -177,7 +179,7 @@ namespace SendEmail
             // 
             // addToUserList
             // 
-            this.addToUserList.Location = new System.Drawing.Point(540, 37);
+            this.addToUserList.Location = new System.Drawing.Point(488, 38);
             this.addToUserList.Name = "addToUserList";
             this.addToUserList.Size = new System.Drawing.Size(59, 26);
             this.addToUserList.TabIndex = 12;
@@ -187,7 +189,7 @@ namespace SendEmail
             // 
             // addCCUserList
             // 
-            this.addCCUserList.Location = new System.Drawing.Point(540, 68);
+            this.addCCUserList.Location = new System.Drawing.Point(488, 68);
             this.addCCUserList.Name = "addCCUserList";
             this.addCCUserList.Size = new System.Drawing.Size(59, 26);
             this.addCCUserList.TabIndex = 13;
@@ -195,11 +197,33 @@ namespace SendEmail
             this.addCCUserList.UseVisualStyleBackColor = true;
             this.addCCUserList.Click += new System.EventHandler(this.addCCUserList_Click);
             // 
-            // MailInfo
+            // delToUserListBtn
+            // 
+            this.delToUserListBtn.Location = new System.Drawing.Point(553, 38);
+            this.delToUserListBtn.Name = "delToUserListBtn";
+            this.delToUserListBtn.Size = new System.Drawing.Size(59, 26);
+            this.delToUserListBtn.TabIndex = 14;
+            this.delToUserListBtn.Text = "删除";
+            this.delToUserListBtn.UseVisualStyleBackColor = true;
+            this.delToUserListBtn.Click += new System.EventHandler(this.delToUserListBtn_Click);
+            // 
+            // delCCUserListBtn
+            // 
+            this.delCCUserListBtn.Location = new System.Drawing.Point(553, 70);
+            this.delCCUserListBtn.Name = "delCCUserListBtn";
+            this.delCCUserListBtn.Size = new System.Drawing.Size(59, 26);
+            this.delCCUserListBtn.TabIndex = 15;
+            this.delCCUserListBtn.Text = "删除";
+            this.delCCUserListBtn.UseVisualStyleBackColor = true;
+            this.delCCUserListBtn.Click += new System.EventHandler(this.delCCUserListBtn_Click);
+            // 
+            // BatchSendingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(611, 696);
+            this.ClientSize = new System.Drawing.Size(632, 696);
+            this.Controls.Add(this.delCCUserListBtn);
+            this.Controls.Add(this.delToUserListBtn);
             this.Controls.Add(this.addCCUserList);
             this.Controls.Add(this.addToUserList);
             this.Controls.Add(this.FileListView);
@@ -218,9 +242,13 @@ namespace SendEmail
             this.Name = "BatchSendingForm";
             this.Text = "SendEmail v1.0           By.SEVENTEEN";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MailInfo_FormClosed);
+            this.Load += new System.EventHandler(this.BatchSendingForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.Button delToUserListBtn;
+        private System.Windows.Forms.Button delCCUserListBtn;
 
         private System.Windows.Forms.Button addToUserList;
         private System.Windows.Forms.Button addCCUserList;
