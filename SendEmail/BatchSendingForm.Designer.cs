@@ -159,22 +159,22 @@ namespace SendEmail
             // 
             // FileNumber
             // 
-            this.FileNumber.Text = "No.";
+            this.FileNumber.Text = "编号";
             this.FileNumber.Width = 40;
             // 
             // FileName
             // 
-            this.FileName.Text = "FileName";
+            this.FileName.Text = "附件名";
             this.FileName.Width = 178;
             // 
             // FileSize
             // 
-            this.FileSize.Text = "FileSize";
+            this.FileSize.Text = "附件大小";
             this.FileSize.Width = 100;
             // 
             // Status
             // 
-            this.Status.Text = "Status";
+            this.Status.Text = "状态";
             this.Status.Width = 80;
             // 
             // addToUserList

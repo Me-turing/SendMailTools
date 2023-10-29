@@ -59,7 +59,15 @@
         <Compile Include="BatchSendingForm.Designer.cs">
           <DependentUpon>BatchSendingForm.cs</DependentUpon>
         </Compile>
+        <Compile Include="MassSendingForm.cs">
+          <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="MassSendingForm.Designer.cs">
+          <DependentUpon>MassSendingForm.cs</DependentUpon>
+        </Compile>
         <Compile Include="model\FileDetails.cs" />
+        <Compile Include="model\IUser.cs" />
+        <Compile Include="model\UserInfo.cs" />
         <Compile Include="Program.cs"/>
         <Compile Include="Properties\AssemblyInfo.cs"/>
         <Compile Include="Util\MailUtils.cs" />
@@ -70,6 +78,9 @@
         </EmbeddedResource>
         <EmbeddedResource Include="BatchSendingForm.resx">
           <DependentUpon>BatchSendingForm.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="MassSendingForm.resx">
+          <DependentUpon>MassSendingForm.cs</DependentUpon>
         </EmbeddedResource>
         <EmbeddedResource Include="Properties\Resources.resx">
             <Generator>ResXFileCodeGenerator</Generator>

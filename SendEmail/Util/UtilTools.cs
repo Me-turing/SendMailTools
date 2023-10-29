@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -75,6 +76,29 @@ namespace SendEmail.Util
 
             return selectedDirectory;
         }
+        
+        /// <summary>
+        /// 选择Txt文本
+        /// </summary>
+        /// <returns></returns>
+        public static string getSelectTxtFile()
+        {
+            string selectedFile = "";
+            OpenFileDialog fileDialog = new OpenFileDialog();
+
+            // 设置过滤器只显示.txt文件
+            fileDialog.Filter = "Text Files (*.txt)|*.txt|All Files (*.*)|*.*";
+            fileDialog.Title = "选择一个txt文件";
+
+            DialogResult result = fileDialog.ShowDialog();
+
+            if (result == DialogResult.OK)
+            {
+                selectedFile = fileDialog.FileName;
+            }
+
+            return selectedFile;
+        }
 
         /// <summary>
         /// 获取指定目录下面的文件对象
@@ -100,6 +124,37 @@ namespace SendEmail.Util
         }
         
         /// <summary>
+        /// 获取Txt文本中每一行的数据,并判断是否是邮箱地址
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        public static (List<string> validEmails, List<string> invalidEmails) readAndValidateTxtFile(string filePath)
+        {
+            List<string> validEmails = new List<string>();
+            List<string> invalidEmails = new List<string>();
+
+            if (File.Exists(filePath))
+            {
+                foreach (string line in File.ReadLines(filePath))
+                {
+                    if (IsValidEmail(line))
+                    {
+                        validEmails.Add(line);
+                    }
+                    else
+                    {
+                        invalidEmails.Add(line);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("文件不存在：" + filePath);
+            }
+            return (validEmails, invalidEmails);
+        }
+        
+        /// <summary>
         /// 启用或禁用当前页面（或窗体）上的所有控件
         /// </summary>
         /// <param name="parent"></param>
@@ -115,5 +170,17 @@ namespace SendEmail.Util
                     SetAllControlsEnabled(ctrl, enabled);
             }
         }
+
+        /// <summary>
+        /// 高亮指定行
+        /// </summary>
+        /// <param name="listView"></param>
+        /// <param name="rowNumber"></param>
+        // public static void highlightRows(ListView listView, int rowNumber)
+        // {
+        //     //设置第一行为红色
+        //     listView.Items[rowNumber].BackColor = SystemColors.Highlight;
+        //     listView.Items[rowNumber].ForeColor = SystemColors.HighlightText;
+        // }
     }
 }
