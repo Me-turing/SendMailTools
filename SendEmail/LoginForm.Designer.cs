@@ -159,7 +159,7 @@
             // 
             // MassSendingBtn
             // 
-            this.MassSendingBtn.Location = new System.Drawing.Point(141, 24);
+            this.MassSendingBtn.Location = new System.Drawing.Point(161, 24);
             this.MassSendingBtn.Name = "MassSendingBtn";
             this.MassSendingBtn.Size = new System.Drawing.Size(104, 24);
             this.MassSendingBtn.TabIndex = 2;
@@ -172,7 +172,7 @@
             this.BatchSendingBtn.Checked = true;
             this.BatchSendingBtn.Location = new System.Drawing.Point(15, 24);
             this.BatchSendingBtn.Name = "BatchSendingBtn";
-            this.BatchSendingBtn.Size = new System.Drawing.Size(120, 24);
+            this.BatchSendingBtn.Size = new System.Drawing.Size(140, 24);
             this.BatchSendingBtn.TabIndex = 1;
             this.BatchSendingBtn.TabStop = true;
             this.BatchSendingBtn.Text = "批量发送附件";
@@ -189,7 +189,7 @@
             this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
             this.Name = "LoginForm";
-            this.Text = "SendEmail v1.0           By.SEVENTEEN";
+            this.Text = "SendEmail v1.5           By.SEVENTEEN";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LoginForm_FormClosed);
             this.Load += new System.EventHandler(this.LoginForm_Load);
             this.groupBox1.ResumeLayout(false);

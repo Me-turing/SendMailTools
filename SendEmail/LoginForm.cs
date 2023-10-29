@@ -85,6 +85,9 @@ namespace SendEmail
             else
             {
                 MessageBox.Show("请检查输入!");
+                this.userPwdTextBox.Text = "";
+                Properties.Settings.Default.userPwd = "";
+                Properties.Settings.Default.Save();
                 UtilTools.SetAllControlsEnabled(this, true);//启用控件
                 return;
             }
