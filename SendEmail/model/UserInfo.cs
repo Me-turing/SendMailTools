@@ -9,20 +9,28 @@ namespace SendEmail.model
 {
     public class UserInfo : IUser
     {
-        private MailMessage toUserMessage;
-        private List<FileDetails> FileDetailsList;
+        private MailMessage toUserMessage = new MailMessage();
+        private String attachmentPath;
+        private List<FileDetails> fileDetailsList = new List<FileDetails>();
         public string ToUserAddress { get; set; }
+        public string NickName { get; set; }
         
+        public String AttachmentPath
+        {
+            get => attachmentPath;
+            set => attachmentPath = value;
+        }
+
         public MailMessage ToUserMessage
         {
             get => toUserMessage;
             set => toUserMessage = value;
         }
 
-        public List<FileDetails> FileDetailsList1
+        public List<FileDetails> FileDetailsList
         {
-            get => FileDetailsList;
-            set => FileDetailsList = value;
+            get => fileDetailsList;
+            set => fileDetailsList = value;
         }
         
         // 将构造函数设置为私有，以防止直接实例化
@@ -41,7 +49,11 @@ namespace SendEmail.model
             {
                 if (!users.ContainsKey(toUserAddress))
                 {
-                    UserInfo user = new UserInfo { ToUserAddress = toUserAddress };
+                    UserInfo user = new UserInfo
+                    {
+                        ToUserAddress = toUserAddress,
+                        NickName = UtilTools.SanitizeEmailToLocalPart(toUserAddress)
+                    };
                     users[toUserAddress] = user;
                 }
                 return users[toUserAddress];
@@ -51,9 +63,9 @@ namespace SendEmail.model
             /// 返回所有的UserAddress
             /// </summary>
             /// <returns></returns>
-            public IReadOnlyList<IUser> GetAllUser()
+            public List<UserInfo> GetAllUser()
             {
-                return users.Values.ToList().AsReadOnly();
+                return users.Values.Cast<UserInfo>().ToList();
             }
         }
     }

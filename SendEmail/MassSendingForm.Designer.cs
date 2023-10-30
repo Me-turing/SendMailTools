@@ -75,6 +75,8 @@ namespace SendEmail
             this.TaskQueueListView.UseCompatibleStateImageBehavior = false;
             this.TaskQueueListView.View = System.Windows.Forms.View.Details;
             this.TaskQueueListView.SelectedIndexChanged += new System.EventHandler(this.TaskQueueListView_SelectedIndexChanged);
+            this.TaskQueueListView.Click += new System.EventHandler(this.TaskQueueListView_Click);
+            this.TaskQueueListView.DoubleClick += new System.EventHandler(this.TaskQueueListView_DoubleClick);
             // 
             // numbers
             // 
@@ -219,6 +221,7 @@ namespace SendEmail
             this.sendBtn.TabIndex = 11;
             this.sendBtn.Text = "发 送";
             this.sendBtn.UseVisualStyleBackColor = true;
+            this.sendBtn.Click += new System.EventHandler(this.sendBtn_Click);
             // 
             // groupBox1
             // 

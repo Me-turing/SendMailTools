@@ -171,16 +171,62 @@ namespace SendEmail.Util
             }
         }
 
+        private static readonly char[] InvalidChars = new char[] { '"', ':', '<', '>', '|', '*', '?', '\\', '/', '\0' };
         /// <summary>
-        /// 高亮指定行
+        /// 清除邮件用户名中的无效字符,使用下划线替代
         /// </summary>
-        /// <param name="listView"></param>
-        /// <param name="rowNumber"></param>
-        // public static void highlightRows(ListView listView, int rowNumber)
-        // {
-        //     //设置第一行为红色
-        //     listView.Items[rowNumber].BackColor = SystemColors.Highlight;
-        //     listView.Items[rowNumber].ForeColor = SystemColors.HighlightText;
-        // }
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public static string SanitizeEmailToLocalPart(string email)
+        {
+            string localPart = email.Split('@')[0];
+            foreach (var invalidChar in InvalidChars)
+            {
+                localPart = localPart.Replace(invalidChar.ToString(), "_");  // 使用下划线替换无效字符
+            }
+            return localPart;
+        }
+        
+        /// <summary>
+        /// 创建子文件目录
+        /// </summary>
+        /// <param name="parentDirectory"></param>
+        /// <param name="subfolders"></param>
+        public static string CreateDirectoriesForSubfolders(string parentDirectory,string subfolders)
+        {
+            var directoryPath = Path.Combine(parentDirectory, subfolders);
+            if (!Directory.Exists(directoryPath))
+            {
+                Directory.CreateDirectory(directoryPath);
+            }
+            
+            return directoryPath;
+        }
+        
+        /// <summary>
+        /// 移动文件到指定目录
+        /// </summary>
+        /// <param name="sourceFilePath"></param>
+        /// <param name="destinationDirectory"></param>
+        public static bool MoveFile(string sourceFilePath, string destinationDirectory)
+        {
+            if (File.Exists(sourceFilePath))
+            {
+                // Ensure the target directory exists
+                if (!Directory.Exists(destinationDirectory))
+                {
+                    Directory.CreateDirectory(destinationDirectory);
+                }
+                string destinationFilePath = Path.Combine(destinationDirectory, Path.GetFileName(sourceFilePath));
+                File.Move(sourceFilePath, destinationFilePath);
+                return true;
+            }
+            else
+            {
+                Console.WriteLine($"Source file '{sourceFilePath}' does not exist.");
+            }
+
+            return false;
+        }
     }
 }
