@@ -124,6 +124,7 @@ namespace SendEmail
             List<String> addCCUserList = addCCUserSet.ToList();//获取抄送列表
             
             var messageStr = "";
+            var messageInfo = new MessageInfo(loginUserName, addToUserList, addCCUserList, titleText, mailInfoText);
             //判断是否有附件
             if (fileList!=null&&fileList.Count>0)
             {
@@ -133,18 +134,7 @@ namespace SendEmail
                     //如果是Ready尝试发送,否则跳过
                     if (fileDetails.FileStatus=="Ready")
                     {
-                        //构建Meaasge
-                        MailMessage message = new MailMessage
-                        {
-                            From = new MailAddress(this.loginUserName),
-                            Subject = this.titleTextBox.Text,
-                            Body = this.MailInfoText.Text
-                        };
-                        
-                        var attachmentPathList = new List<String>();
-                        var attachmentPath = this.pathStr +"\\"+ fileDetails.FileName;
-                        attachmentPathList.Add(attachmentPath);
-                        messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient, message, addToUserList, addCCUserList, attachmentPathList));
+                        messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,messageInfo.getMailMessage(fileDetails)));
                         if (messageStr!="Success")
                         {
                             MessageBox.Show(messageStr);
@@ -162,14 +152,7 @@ namespace SendEmail
             }
             else
             {
-                //构建Meaasge
-                MailMessage message = new MailMessage
-                {
-                    From = new MailAddress(this.loginUserName),
-                    Subject = this.titleTextBox.Text,
-                    Body = this.MailInfoText.Text
-                };
-                messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient, message, addToUserList, addCCUserList, null));
+                messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,messageInfo.getMailMessage()));
             }
             
             if (messageStr!="")

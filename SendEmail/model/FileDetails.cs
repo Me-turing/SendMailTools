@@ -7,15 +7,22 @@ namespace SendEmail.model
     {
         private String fileName;
         private long fileSize;
+        private String filePath;
         private String fileStatus;
-
-        public FileDetails(string fileName, long fileSize, string status)
+        
+        public FileDetails(string fileName, long fileSize, string filePath,string status)
         {
-            this.fileName = fileName;
-            this.fileSize = fileSize;
-            fileStatus = status;
+            FileName = fileName;
+            FileSize = fileSize;
+            FileStatus = status;
+            FilePath = filePath;
         }
 
+        public string FilePath
+        {
+            get => filePath;
+            set => filePath = value;
+        }
         public string FileName
         {
             get => fileName;

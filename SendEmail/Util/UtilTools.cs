@@ -117,7 +117,8 @@ namespace SendEmail.Util
                     FileInfo fileInfo = new FileInfo(file);
                     string fileName = fileInfo.Name;
                     long fileSize = fileInfo.Length;
-                    fileDetailsList.Add(new FileDetails(fileName,fileSize,"Ready"));
+                    string filePath = fileInfo.DirectoryName;
+                    fileDetailsList.Add(new FileDetails(fileName,fileSize,filePath,"Ready"));
                 }
             }
             return fileDetailsList;
@@ -226,6 +227,20 @@ namespace SendEmail.Util
                 Console.WriteLine($"Source file '{sourceFilePath}' does not exist.");
             }
 
+            return false;
+        }
+
+        /// <summary>
+        /// 校验List是否为空
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public static bool checkListIsNull<T>(List<T> list)
+        {
+            if (list is null || list.Count == 0)
+            {
+                return true;
+            }
             return false;
         }
     }
