@@ -16,7 +16,7 @@ namespace SendEmail
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            // Application.Run(new MassSendingForm(null,null));
+            // Application.Run(new TaskDetailsForm(null,null));
             Application.Run(new LoginForm());
         }
     }

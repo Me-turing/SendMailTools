@@ -59,6 +59,12 @@
         <Compile Include="BatchSendingForm.Designer.cs">
           <DependentUpon>BatchSendingForm.cs</DependentUpon>
         </Compile>
+        <Compile Include="TaskDetailsForm.cs">
+          <SubType>Form</SubType>
+        </Compile>
+        <Compile Include="TaskDetailsForm.Designer.cs">
+          <DependentUpon>TaskDetailsForm.cs</DependentUpon>
+        </Compile>
         <Compile Include="model\FileDetails.cs" />
         <Compile Include="model\MessageInfo.cs" />
         <Compile Include="Program.cs"/>
@@ -71,6 +77,9 @@
         </EmbeddedResource>
         <EmbeddedResource Include="BatchSendingForm.resx">
           <DependentUpon>BatchSendingForm.cs</DependentUpon>
+        </EmbeddedResource>
+        <EmbeddedResource Include="TaskDetailsForm.resx">
+          <DependentUpon>TaskDetailsForm.cs</DependentUpon>
         </EmbeddedResource>
         <EmbeddedResource Include="Properties\Resources.resx">
             <Generator>ResXFileCodeGenerator</Generator>

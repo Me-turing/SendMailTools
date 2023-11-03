@@ -65,21 +65,10 @@ namespace SendEmail
                 Properties.Settings.Default.userPwd = userPwd;
                 Properties.Settings.Default.prot = prot;
                 Properties.Settings.Default.smtpAddress = smtpAddress;
-                Properties.Settings.Default.MassSending = this.MassSendingBtn.Checked;
-                Properties.Settings.Default.BatchSending = this.BatchSendingBtn.Checked;
                 Properties.Settings.Default.Save();
 
-                if (this.MassSendingBtn.Checked)
-                {
-                    MessageBox.Show("开发中....");
-                    UtilTools.SetAllControlsEnabled(this, true);//启用控件
-                    return;
-                }
-                else
-                {
-                    UtilTools.SetAllControlsEnabled(this, true);//启用控件
-                    new BatchSendingForm(smtpClient,userName).Show();
-                }
+                UtilTools.SetAllControlsEnabled(this, true);//启用控件
+                new TaskDetailsForm(smtpClient, userName).Show();
                 this.Hide();
             }
             else
@@ -98,35 +87,6 @@ namespace SendEmail
            Application.Exit();
        }
        
-
-       /// <summary>
-       /// 群发邮件
-       /// </summary>
-       /// <param name="sender"></param>
-       /// <param name="e"></param>
-       /// <exception cref="NotImplementedException"></exception>
-       private void MassSendingBtn_CheckedChanged(object sender, EventArgs e)
-       {
-           if (this.MassSendingBtn.Checked)
-           {
-               this.BatchSendingBtn.Checked = false;
-           }
-       }
-
-       /// <summary>
-       /// 批量发送附件
-       /// </summary>
-       /// <param name="sender"></param>
-       /// <param name="e"></param>
-       /// <exception cref="NotImplementedException"></exception>
-       private void BatchSendingBtn_CheckedChanged(object sender, EventArgs e)
-       {
-           if (this.BatchSendingBtn.Checked )
-           {
-               this.MassSendingBtn.Checked = false;
-           }
-       }
-
        /// <summary>
        /// 窗口初始化加载
        /// </summary>

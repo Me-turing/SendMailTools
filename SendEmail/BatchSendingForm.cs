@@ -125,6 +125,7 @@ namespace SendEmail
             
             var messageStr = "";
             var messageInfo = new MessageInfo(loginUserName, addToUserList, addCCUserList, titleText, mailInfoText);
+            
             //判断是否有附件
             if (fileList!=null&&fileList.Count>0)
             {

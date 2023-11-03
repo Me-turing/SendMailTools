@@ -18,6 +18,7 @@ namespace SendEmail.model
         private List<String> ccEmailAddressList;//抄送人列表
         private string emailTitle;//邮件标题
         private string emailMessage;//邮件内容
+        private List<FileDetails> attachmentList; //附件列表
         
         /// <summary>
         /// 构造对象

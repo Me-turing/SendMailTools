@@ -40,12 +40,8 @@
             this.smtpAddressTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.mode = new System.Windows.Forms.GroupBox();
-            this.MassSendingBtn = new System.Windows.Forms.RadioButton();
-            this.BatchSendingBtn = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.mode.SuspendLayout();
             this.SuspendLayout();
             // 
             // userNameTextBox
@@ -109,7 +105,7 @@
             this.groupBox2.Controls.Add(this.smtpAddressTextBox);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.label4);
-            this.groupBox2.Location = new System.Drawing.Point(10, 216);
+            this.groupBox2.Location = new System.Drawing.Point(11, 155);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(492, 65);
             this.groupBox2.TabIndex = 6;
@@ -146,45 +142,11 @@
             this.label4.TabIndex = 2;
             this.label4.Text = "端 口:";
             // 
-            // mode
-            // 
-            this.mode.Controls.Add(this.MassSendingBtn);
-            this.mode.Controls.Add(this.BatchSendingBtn);
-            this.mode.Location = new System.Drawing.Point(11, 155);
-            this.mode.Name = "mode";
-            this.mode.Size = new System.Drawing.Size(491, 55);
-            this.mode.TabIndex = 7;
-            this.mode.TabStop = false;
-            this.mode.Text = "模式";
-            // 
-            // MassSendingBtn
-            // 
-            this.MassSendingBtn.Location = new System.Drawing.Point(161, 24);
-            this.MassSendingBtn.Name = "MassSendingBtn";
-            this.MassSendingBtn.Size = new System.Drawing.Size(104, 24);
-            this.MassSendingBtn.TabIndex = 2;
-            this.MassSendingBtn.Text = "群发模式";
-            this.MassSendingBtn.UseVisualStyleBackColor = true;
-            this.MassSendingBtn.CheckedChanged += new System.EventHandler(this.MassSendingBtn_CheckedChanged);
-            // 
-            // BatchSendingBtn
-            // 
-            this.BatchSendingBtn.Checked = true;
-            this.BatchSendingBtn.Location = new System.Drawing.Point(15, 24);
-            this.BatchSendingBtn.Name = "BatchSendingBtn";
-            this.BatchSendingBtn.Size = new System.Drawing.Size(140, 24);
-            this.BatchSendingBtn.TabIndex = 1;
-            this.BatchSendingBtn.TabStop = true;
-            this.BatchSendingBtn.Text = "批量发送附件";
-            this.BatchSendingBtn.UseVisualStyleBackColor = true;
-            this.BatchSendingBtn.CheckedChanged += new System.EventHandler(this.BatchSendingBtn_CheckedChanged);
-            // 
             // LoginForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(518, 294);
-            this.Controls.Add(this.mode);
+            this.ClientSize = new System.Drawing.Size(518, 236);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
@@ -196,17 +158,10 @@
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.mode.ResumeLayout(false);
             this.ResumeLayout(false);
         }
 
-        private System.Windows.Forms.RadioButton MassSendingBtn;
-
         private System.Windows.Forms.RadioButton MassHairBtn;
-
-        private System.Windows.Forms.RadioButton BatchSendingBtn;
-
-        private System.Windows.Forms.GroupBox mode;
 
         private System.Windows.Forms.TextBox protTextBox;
         private System.Windows.Forms.Label label4;
