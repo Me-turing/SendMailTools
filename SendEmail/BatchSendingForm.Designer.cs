@@ -108,7 +108,7 @@ namespace SendEmail
             this.SendBtn.Name = "SendBtn";
             this.SendBtn.Size = new System.Drawing.Size(88, 84);
             this.SendBtn.TabIndex = 6;
-            this.SendBtn.Text = "发送";
+            this.SendBtn.Text = "保存";
             this.SendBtn.UseVisualStyleBackColor = true;
             this.SendBtn.Click += new System.EventHandler(this.SendBtn_Click);
             // 

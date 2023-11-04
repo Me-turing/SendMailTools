@@ -118,7 +118,8 @@ namespace SendEmail.Util
                     string fileName = fileInfo.Name;
                     long fileSize = fileInfo.Length;
                     string filePath = fileInfo.DirectoryName;
-                    fileDetailsList.Add(new FileDetails(fileName,fileSize,filePath,"Ready"));
+                    string fileDirectory = fileInfo.Directory.FullName;
+                    fileDetailsList.Add(new FileDetails(fileName,fileSize,fileDirectory,filePath,"Ready"));
                 }
             }
             return fileDetailsList;
@@ -235,7 +236,16 @@ namespace SendEmail.Util
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static bool checkListIsNull<T>(List<T> list)
+        public static bool checkListOrSetIsNull<T>(List<T> list)
+        {
+            if (list is null || list.Count == 0)
+            {
+                return true;
+            }
+            return false;
+        }
+        
+        public static bool checkListOrSetIsNull<T>(HashSet<T> list)
         {
             if (list is null || list.Count == 0)
             {

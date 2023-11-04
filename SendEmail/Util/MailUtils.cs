@@ -26,7 +26,7 @@ namespace SendEmail.Util
             {
                 return falg;
             }
-            List<String> toEmailAddressList = new List<String>();
+            HashSet<String> toEmailAddressList = new HashSet<String>();
             toEmailAddressList.Add(userAddressStr);
             var mailMessage = new MessageInfo(userAddressStr,toEmailAddressList,
                 null,"Test Email","如果您看到这条消息,意味着您的邮件配置一切正常.")

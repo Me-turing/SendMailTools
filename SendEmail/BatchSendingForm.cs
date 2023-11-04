@@ -18,18 +18,51 @@ namespace SendEmail
         private HashSet<String> addCCUserSet = new HashSet<String>();//存放抄送人地址
         private SmtpClient smtpClient = null; //获取邮件链接
         private String loginUserName = null; //当前用户登录的角色
+        private TaskDetails taskDetails = null; //任务详情
         
         private List<FileDetails> fileList = null; //附件列表
         private String pathStr = null; //附件地址
+        private TaskDetailsForm taskDetailsForm;
         
-        public BatchSendingForm(SmtpClient smtpClient,String loginUserName)
+        public BatchSendingForm(SmtpClient smtpClient,String loginUserName,TaskDetails taskDetails,TaskDetailsForm form)
         {
+            InitializeComponent();
             this.smtpClient = smtpClient;
             this.loginUserName = loginUserName;
-            InitializeComponent();
+            this.taskDetailsForm = form;
+            initFromInfo(taskDetails);
         }
-        
-        
+
+        /// <summary>
+        /// 初始化页面信息
+        /// </summary>
+        /// <param name="taskDetails"></param>
+        private void initFromInfo(TaskDetails taskDetails)
+        {
+            //执行初始化操作
+            if (taskDetails != null)
+            {
+                fileList = taskDetails.AttachmentList;
+                if (!UtilTools.checkListOrSetIsNull(fileList))
+                {
+                    this.FilePathText.Text = fileList[0].FileDirectory;
+                }
+                if (taskDetails.MessageInfo != null)
+                {
+                    addToUserSet.Clear();
+                    addCCUserSet.Clear();
+                    addToUserSet.UnionWith(taskDetails.MessageInfo.ToEmailAddressList);
+                    this.toUserAddressList.Text = UtilTools.formatMailingList(addToUserSet);
+                    addCCUserSet.UnionWith(taskDetails.MessageInfo.CcEmailAddressList);
+                    this.ccUserAddressList.Text = UtilTools.formatMailingList(addCCUserSet);
+                    this.titleTextBox.Text = taskDetails.MessageInfo.EmailMessage;
+                    this.MailInfoText.Text = taskDetails.MessageInfo.EmailTitle;
+                }
+                this.taskDetails = taskDetails;
+                this.updateListView(fileList);
+            }
+        }
+
         /// <summary>
         /// 单击添加发送列表
         /// </summary>
@@ -120,47 +153,49 @@ namespace SendEmail
             }
             
             //发送邮件,此时无附件
-            List<String> addToUserList = addToUserSet.ToList();//获取发送列表
-            List<String> addCCUserList = addCCUserSet.ToList();//获取抄送列表
+            HashSet<String> addToUserList = addToUserSet.ToHashSet();//获取发送列表
+            HashSet<String> addCCUserList = addCCUserSet.ToHashSet();//获取抄送列表
             
-            var messageStr = "";
-            var messageInfo = new MessageInfo(loginUserName, addToUserList, addCCUserList, titleText, mailInfoText);
-            
+            taskDetails.MessageInfo = new MessageInfo(loginUserName, addToUserList, addCCUserList, titleText, mailInfoText);
+            taskDetails.TaskTitle = this.titleTextBox.Text;
             //判断是否有附件
             if (fileList!=null&&fileList.Count>0)
             {
-                //循环发送邮件
-                foreach (var fileDetails in fileList)
-                {
-                    //如果是Ready尝试发送,否则跳过
-                    if (fileDetails.FileStatus=="Ready")
-                    {
-                        messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,messageInfo.getMailMessage(fileDetails)));
-                        if (messageStr!="Success")
-                        {
-                            MessageBox.Show(messageStr);
-                            MessageBox.Show("点击[发送按钮],可以继续发送邮件");
-                            return;
-                        }
-                        else
-                        {
-                            fileDetails.FileStatus = "OK!";
-                            this.Invoke((MethodInvoker)delegate { this.updateListView(fileList); });    
-                        }
-                        Thread.Sleep(1000); 
-                    }
-                }
+                taskDetails.AttachmentList = fileList;
+                // //循环发送邮件
+                // foreach (var fileDetails in fileList)
+                // {
+                //     //如果是Ready尝试发送,否则跳过
+                //     if (fileDetails.FileStatus=="Ready")
+                //     {
+                //         messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,messageInfo.getMailMessage(fileDetails)));
+                //         if (messageStr!="Success")
+                //         {
+                //             MessageBox.Show(messageStr);
+                //             MessageBox.Show("点击[发送按钮],可以继续发送邮件");
+                //             return;
+                //         }
+                //         else
+                //         {
+                //             fileDetails.FileStatus = "OK!";
+                //             this.Invoke((MethodInvoker)delegate { this.updateListView(fileList); });    
+                //         }
+                //         Thread.Sleep(1000); 
+                //     }
+                // }
             }
-            else
-            {
-                messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,messageInfo.getMailMessage()));
-            }
-            
-            if (messageStr!="")
-            {
-                MessageBox.Show(messageStr);
-            }
+            // else
+            // {
+            //     // messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,messageInfo.getMailMessage()));
+            // }
+            // if (messageStr!="")
+            // {
+            //     MessageBox.Show(messageStr);
+            // }
             UtilTools.SetAllControlsEnabled(this,true);// 启用控件
+            taskDetailsForm.Show();
+            taskDetailsForm.updateTaskDetail(taskDetails);
+            this.Hide();
         }
 
         /// <summary>
@@ -191,16 +226,19 @@ namespace SendEmail
         /// <param name="fileList"></param>
         private void updateListView(List<FileDetails> fileList)
         {
-            this.FileListView.Items.Clear(); // 尝试情况现有内容
-            for (var i = 0; i < fileList.Count; i++)
+            if (this.FileListView != null && fileList != null)
             {
-                ListViewItem lvi = new ListViewItem((i + 1).ToString());
-                lvi.SubItems.Add(fileList[i].FileName);
-                double megabytes = (double)fileList[i].FileSize / (1024 * 1024);
-                string formattedMegabytes = megabytes.ToString("0.0000");
-                lvi.SubItems.Add(formattedMegabytes + " MB");
-                lvi.SubItems.Add(fileList[i].FileStatus);
-                this.FileListView.Items.Add(lvi);
+                this.FileListView.Items.Clear(); // 尝试情况现有内容
+                for (var i = 0; i < fileList.Count; i++)
+                {
+                    ListViewItem lvi = new ListViewItem((i + 1).ToString());
+                    lvi.SubItems.Add(fileList[i].FileName);
+                    double megabytes = (double)fileList[i].FileSize / (1024 * 1024);
+                    string formattedMegabytes = megabytes.ToString("0.0000");
+                    lvi.SubItems.Add(formattedMegabytes + " MB");
+                    lvi.SubItems.Add(fileList[i].FileStatus);
+                    this.FileListView.Items.Add(lvi);
+                }
             }
         }
 
@@ -211,7 +249,9 @@ namespace SendEmail
         /// <param name="e"></param>
         private void MailInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
-            Application.Exit();
+            // Application.Exit();
+            this.Hide();
+            taskDetailsForm.Show();
         }
 
         /// <summary>

@@ -59,6 +59,7 @@
         <Compile Include="BatchSendingForm.Designer.cs">
           <DependentUpon>BatchSendingForm.cs</DependentUpon>
         </Compile>
+        <Compile Include="model\TaskDetails.cs" />
         <Compile Include="TaskDetailsForm.cs">
           <SubType>Form</SubType>
         </Compile>

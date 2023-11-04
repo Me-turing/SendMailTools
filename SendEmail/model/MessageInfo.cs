@@ -12,13 +12,41 @@ namespace SendEmail.model
     /// </summary>
     public class MessageInfo
     {
-        
         private string fromEmailAddress;//发送人信息
-        private List<String> toEmailAddressList;//收件人列表
-        private List<String> ccEmailAddressList;//抄送人列表
+        private HashSet<String> toEmailAddressList = new HashSet<string>();//收件人列表
+        private HashSet<String> ccEmailAddressList = new HashSet<string>();//抄送人列表
         private string emailTitle;//邮件标题
         private string emailMessage;//邮件内容
-        private List<FileDetails> attachmentList; //附件列表
+        
+        public string FromEmailAddress
+        {
+            get => fromEmailAddress;
+            set => fromEmailAddress = value;
+        }
+
+        public HashSet<string> ToEmailAddressList
+        {
+            get => toEmailAddressList;
+            set => toEmailAddressList = value;
+        }
+
+        public HashSet<string> CcEmailAddressList
+        {
+            get => ccEmailAddressList;
+            set => ccEmailAddressList = value;
+        }
+
+        public string EmailTitle
+        {
+            get => emailTitle;
+            set => emailTitle = value;
+        }
+
+        public string EmailMessage
+        {
+            get => emailMessage;
+            set => emailMessage = value;
+        }
         
         /// <summary>
         /// 构造对象
@@ -28,7 +56,7 @@ namespace SendEmail.model
         /// <param name="ccEmailAddressList"></param>
         /// <param name="emailTitle"></param>
         /// <param name="emailMessage"></param>
-        public MessageInfo(string fromEmailAddress, List<string> toEmailAddressList, List<string> ccEmailAddressList, string emailTitle, string emailMessage)
+        public MessageInfo(string fromEmailAddress, HashSet<string> toEmailAddressList, HashSet<string> ccEmailAddressList, string emailTitle, string emailMessage)
         {
             this.fromEmailAddress = fromEmailAddress;
             this.toEmailAddressList = toEmailAddressList;
@@ -99,7 +127,7 @@ namespace SendEmail.model
         public MailMessage getMailMessage()
         {
             //优先检查必须项目
-            if (string.IsNullOrEmpty(fromEmailAddress)||UtilTools.checkListIsNull(toEmailAddressList)||
+            if (string.IsNullOrEmpty(fromEmailAddress)||UtilTools.checkListOrSetIsNull(toEmailAddressList)||
                 string.IsNullOrEmpty(emailTitle)||string.IsNullOrEmpty(emailMessage))
             {
                 Console.WriteLine("必须属性不能为空~!");
@@ -120,7 +148,7 @@ namespace SendEmail.model
             }
             
             //添加抄送人
-            if (!UtilTools.checkListIsNull(ccEmailAddressList))
+            if (!UtilTools.checkListOrSetIsNull(ccEmailAddressList))
             {
                 foreach (var ccEmailAddress in ccEmailAddressList)
                 {

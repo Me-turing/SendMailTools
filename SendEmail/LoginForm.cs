@@ -68,7 +68,7 @@ namespace SendEmail
                 Properties.Settings.Default.Save();
 
                 UtilTools.SetAllControlsEnabled(this, true);//启用控件
-                new TaskDetailsForm(smtpClient, userName).Show();
+                new TaskDetailsForm(smtpClient, userName,null).Show();
                 this.Hide();
             }
             else
