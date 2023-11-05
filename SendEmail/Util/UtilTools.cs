@@ -117,8 +117,8 @@ namespace SendEmail.Util
                     FileInfo fileInfo = new FileInfo(file);
                     string fileName = fileInfo.Name;
                     long fileSize = fileInfo.Length;
-                    string filePath = fileInfo.DirectoryName;
-                    string fileDirectory = fileInfo.Directory.FullName;
+                    string filePath = fileInfo.DirectoryName + "\\" + fileName;
+                    string fileDirectory = fileInfo.DirectoryName;
                     fileDetailsList.Add(new FileDetails(fileName,fileSize,fileDirectory,filePath,"Ready"));
                 }
             }

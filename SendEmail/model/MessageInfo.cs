@@ -105,17 +105,19 @@ namespace SendEmail.model
             MailMessage mailMessage = getMailMessage();
             
             //添加附件
-            if (!String.IsNullOrEmpty(fileDetails.FilePath))
+            if (!String.IsNullOrEmpty(fileDetails.FilePath) && File.Exists(fileDetails.FilePath))
             {
-                if (File.Exists(fileDetails.FilePath))
-                {
-                    Attachment attachment = new Attachment(fileDetails.FilePath, MediaTypeNames.Application.Octet);
-                    ContentDisposition disposition = attachment.ContentDisposition;
-                    disposition.CreationDate = File.GetCreationTime(fileDetails.FilePath);
-                    disposition.ModificationDate = File.GetLastWriteTime(fileDetails.FilePath);
-                    disposition.ReadDate = File.GetLastAccessTime(fileDetails.FilePath);
-                    mailMessage.Attachments.Add(attachment);
-                }
+                Attachment attachment = new Attachment(fileDetails.FilePath, MediaTypeNames.Application.Octet);
+                ContentDisposition disposition = attachment.ContentDisposition;
+                disposition.CreationDate = File.GetCreationTime(fileDetails.FilePath);
+                disposition.ModificationDate = File.GetLastWriteTime(fileDetails.FilePath);
+                disposition.ReadDate = File.GetLastAccessTime(fileDetails.FilePath);
+                mailMessage.Attachments.Add(attachment);
+            }
+            else
+            {
+                //如果附件不存在则返回空
+                return null;
             }
             return mailMessage;
         }

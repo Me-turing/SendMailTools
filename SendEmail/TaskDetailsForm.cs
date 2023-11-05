@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using SendEmail.model;
 using SendEmail.Util;
@@ -24,32 +25,38 @@ namespace SendEmail
         // 这个方法用于计算OK状态的百分比
         private double CalculateOkPercentage(List<FileDetails> attachmentList)
         {
-            int okCount = attachmentList.Count(f => f.FileStatus.Equals("OK"));
-            return attachmentList.Count > 0 ? (double)okCount / attachmentList.Count * 100 : 0;
+            double culateOk = 0.00;
+            if (attachmentList!=null && attachmentList.Count > 0)
+            {
+                int okCount = attachmentList.Count(f => f.FileStatus.Equals("OK"));
+                culateOk =  attachmentList.Count > 0 ? (double)okCount / attachmentList.Count * 100 : 0;
+            }
+            return culateOk;
         }
 
         public void updateTaskDetailsToView()
         {
             this.TaskListView.Items.Clear(); // 尝试情况现有内容
             List<TaskDetails> taskDetailsList = TaskDetails.TaskFactory.Instance.GetAllTaskDetails();
-            if(UtilTools.checkListOrSetIsNull(taskDetailsList)) return;
-            foreach (var taskDetails in taskDetailsList)
+            if (!UtilTools.checkListOrSetIsNull(taskDetailsList))
             {
-                ListViewItem item = new ListViewItem(taskDetails.TaskNumber);
-                item.SubItems.Add(taskDetails.TaskTitle ?? "N/A");
-
-                if (taskDetails.AttachmentList != null)
+                foreach (var taskDetails in taskDetailsList)
                 {
-                    item.SubItems.Add(taskDetails.AttachmentList.Count.ToString());
-                    double percentage = CalculateOkPercentage(taskDetails.AttachmentList);
-                    item.SubItems.Add($"{percentage:F2}%");
+                    ListViewItem item = new ListViewItem(taskDetails.TaskNumber);
+                    item.SubItems.Add(taskDetails.TaskTitle ?? "N/A");
+                    if (taskDetails.AttachmentList != null)
+                    {
+                        item.SubItems.Add(taskDetails.AttachmentList.Count.ToString());
+                        double percentage = CalculateOkPercentage(taskDetails.AttachmentList);
+                        item.SubItems.Add($"{percentage:F2}%");
+                    }
+                    else
+                    {
+                        item.SubItems.Add("N/A");
+                        item.SubItems.Add("N/A");
+                    }
+                    this.TaskListView.Items.Add(item);
                 }
-                else
-                {
-                    item.SubItems.Add("N/A");
-                    item.SubItems.Add("N/A");
-                }
-                this.TaskListView.Items.Add(item);
             }
         }
 
@@ -104,6 +111,66 @@ namespace SendEmail
             {
                 MessageBox.Show("请选择一条任务操作");
             }
+        }
+
+        private async void sendEmailBtn_Click(object sender, EventArgs e)
+        {
+            //禁用所有的控件
+            UtilTools.SetAllControlsEnabled(this,false);// 禁用控件
+            //发送邮件
+            var taskDetailsList = TaskDetails.TaskFactory.Instance.GetAllTaskDetails();
+            foreach (var taskDetails in taskDetailsList)
+            {
+                if (taskDetails.AttachmentList != null && taskDetails.AttachmentList.Count > 0)
+                {
+                    foreach (var fileDetails in taskDetails.AttachmentList)
+                    {
+                        string messageStr = "";
+                        //构建邮件并发送
+                        var mailMessage = taskDetails.MessageInfo.getMailMessage(fileDetails);
+                        if (mailMessage == null)
+                        {
+                            this.Invoke((MethodInvoker)delegate { this.updateTaskDetailsToView(); });
+                            continue;
+                        }
+
+                        //如果是Ready尝试发送,否则跳过
+                        if (fileDetails.FileStatus=="Ready")
+                        {
+                            messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,mailMessage));
+                            if (messageStr!="Success")
+                            {
+                                MessageBox.Show(messageStr);
+                                MessageBox.Show("点击[发送按钮],可以继续发送邮件");
+                                return;
+                            }
+                            else
+                            {
+                                fileDetails.FileStatus = "OK";
+                            }
+                            this.Invoke((MethodInvoker)delegate { this.updateTaskDetailsToView(); });
+                        }
+                    }
+                }
+                else
+                {
+                    var mailMessage = taskDetails.MessageInfo.getMailMessage();
+                    string messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,mailMessage));
+                    if (messageStr=="Success")
+                    {
+                        taskDetails.TaskSchedule = "100.00%";
+                        taskDetails.AttachmentList.Add(new FileDetails("Single email without attachments",0,"N/A","N/A","OK"));
+                    }
+                }
+                this.Invoke((MethodInvoker)delegate { this.updateTaskDetailsToView(); });    
+            }
+            //启用所有的控件
+            UtilTools.SetAllControlsEnabled(this,true);// 禁用控件
+        }
+
+        private void TaskDetailsForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
         }
     }
 }

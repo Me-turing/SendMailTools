@@ -8,6 +8,8 @@ namespace SendEmail.model
     {
         private string taskNumber;
         private string taskTitle;
+        private int emailCount;
+        private string taskSchedule;
         private List<FileDetails> attachmentList = new List<FileDetails>(); //附件列表
         private MessageInfo messageInfo = null; 
 
@@ -15,17 +17,29 @@ namespace SendEmail.model
         {
         }
         
-        private TaskDetails(string taskNumber,string taskTitle,List<FileDetails> attachmentList,MessageInfo messageInfo)
+        private TaskDetails(string taskNumber,string taskTitle,int emailCount,string taskSchedule,List<FileDetails> attachmentList,MessageInfo messageInfo)
         {
             if (!string.IsNullOrEmpty(taskNumber))
             {
                 this.taskNumber = taskNumber;
                 TaskTitle = taskTitle;
+                EmailCount = emailCount;
+                TaskSchedule = taskSchedule;
                 AttachmentList = attachmentList;
                 MessageInfo = messageInfo;
             }
         }
         
+        public int EmailCount
+        {
+            get => emailCount;
+            set => emailCount = value;
+        }
+        public String TaskSchedule
+        {
+            get => taskSchedule;
+            set => taskSchedule = value;
+        }
         public string TaskNumber
         {
             get => taskNumber;
@@ -69,6 +83,8 @@ namespace SendEmail.model
                     {
                         taskNumber = taskNumber,
                         TaskTitle = "N/A",
+                        EmailCount = 0,
+                        TaskSchedule = "0.00%",
                         AttachmentList = new List<FileDetails>(),
                         MessageInfo = null
                     };

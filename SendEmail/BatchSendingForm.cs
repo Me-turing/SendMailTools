@@ -144,64 +144,42 @@ namespace SendEmail
             
             taskDetails.MessageInfo = new MessageInfo(loginUserName, addToUserList, addCCUserList, titleText, mailInfoText);
             taskDetails.TaskTitle = this.titleTextBox.Text;
+            taskDetails.EmailCount = fileList.Count;
+            taskDetails.TaskSchedule = CalculateOkPercentage(fileList);
             //判断是否有附件
             if (fileList!=null&&fileList.Count>0)
             {
                 taskDetails.AttachmentList = fileList;
-                // //循环发送邮件
-                // foreach (var fileDetails in fileList)
-                // {
-                //     //如果是Ready尝试发送,否则跳过
-                //     if (fileDetails.FileStatus=="Ready")
-                //     {
-                //         messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,messageInfo.getMailMessage(fileDetails)));
-                //         if (messageStr!="Success")
-                //         {
-                //             MessageBox.Show(messageStr);
-                //             MessageBox.Show("点击[发送按钮],可以继续发送邮件");
-                //             return;
-                //         }
-                //         else
-                //         {
-                //             fileDetails.FileStatus = "OK!";
-                //             this.Invoke((MethodInvoker)delegate { this.updateListView(fileList); });    
-                //         }
-                //         Thread.Sleep(1000); 
-                //     }
-                // }
             }
-            // else
-            // {
-            //     // messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,messageInfo.getMailMessage()));
-            // }
-            // if (messageStr!="")
-            // {
-            //     MessageBox.Show(messageStr);
-            // }
             UtilTools.SetAllControlsEnabled(this,true);// 启用控件
             taskDetailsForm.Show();
             taskDetailsForm.updateTaskDetailsToView();
             this.Hide();
         }
-
+        private string CalculateOkPercentage(List<FileDetails> attachmentList)
+        {
+            int okCount = attachmentList.Count(f => f.FileStatus.Equals("OK"));
+            return attachmentList.Count > 0 ? ((double)okCount / attachmentList.Count * 100) + " %" : "0.00 %";
+        }
+        
         private string checkUserInput(String titleText,String mailInfoText,string toUserAddress)
         {
             string result = "";
             if (string.IsNullOrEmpty(titleText))
             {
-                result += "邮件标题不能为空 /n";
+                result += "邮件标题不能为空 \n";
           
             }
             //内容不能为空
             if (string.IsNullOrEmpty(mailInfoText))
             {
-                result += "邮件内容不能为空 /n";
+                result += "邮件内容不能为空 \n";
             }
             
             //发送人不能为空
             if (string.IsNullOrEmpty(toUserAddress)  || addToUserSet.Count==0)
             {
-                result += "收件人不能为空 /n";
+                result += "收件人不能为空 \n";
             }
             UtilTools.SetAllControlsEnabled(this,true);// 启用控件
             return result;

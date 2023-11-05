@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using SendEmail.model;
@@ -54,6 +55,7 @@ namespace SendEmail.Util
                     return "连接不能为空!";
                 }
                 client.Send(message);
+                Thread.Sleep(1000);
                 return "Success";
             }
             catch (Exception ex)
