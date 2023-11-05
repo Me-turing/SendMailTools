@@ -55,6 +55,7 @@ namespace SendEmail
             this.TaskListView.TabIndex = 0;
             this.TaskListView.UseCompatibleStateImageBehavior = false;
             this.TaskListView.View = System.Windows.Forms.View.Details;
+            this.TaskListView.DoubleClick += new System.EventHandler(this.TaskListView_DoubleClick);
             // 
             // taskNumber
             // 
@@ -84,6 +85,7 @@ namespace SendEmail
             this.DelTaskBtn.TabIndex = 2;
             this.DelTaskBtn.Text = "删除任务";
             this.DelTaskBtn.UseVisualStyleBackColor = true;
+            this.DelTaskBtn.Click += new System.EventHandler(this.DelTaskBtn_Click);
             // 
             // AddTaskBtn
             // 
@@ -112,7 +114,7 @@ namespace SendEmail
             this.editTaskBtn.TabIndex = 4;
             this.editTaskBtn.Text = "修改任务";
             this.editTaskBtn.UseVisualStyleBackColor = true;
-            this.editTaskBtn.Click += new System.EventHandler(this.editTaskBtn_Click);
+            this.editTaskBtn.Click += new System.EventHandler(this.editTskBtn_Click);
             // 
             // TaskDetailsForm
             // 

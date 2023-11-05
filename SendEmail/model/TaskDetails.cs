@@ -60,6 +60,7 @@ namespace SendEmail.model
             {
                 get { return _instance; }
             }
+            
             public TaskDetails GetTaskDetails(string taskNumber)
             {
                 if (!_taskDetailsDict.TryGetValue(taskNumber, out TaskDetails taskDetails))
@@ -79,6 +80,15 @@ namespace SendEmail.model
             public List<TaskDetails> GetAllTaskDetails()
             {
                 return _taskDetailsDict.Values.ToList();
+            }
+            
+            public bool RemoveTaskDetail(string taskNumber)
+            {
+                if (_taskDetailsDict.TryGetValue(taskNumber, out TaskDetails taskDetails))
+                {
+                    return  _taskDetailsDict.Remove(taskNumber);
+                }
+                return false;
             }
         }
     }

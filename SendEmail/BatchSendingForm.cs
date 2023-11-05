@@ -55,8 +55,8 @@ namespace SendEmail
                     this.toUserAddressList.Text = UtilTools.formatMailingList(addToUserSet);
                     addCCUserSet.UnionWith(taskDetails.MessageInfo.CcEmailAddressList);
                     this.ccUserAddressList.Text = UtilTools.formatMailingList(addCCUserSet);
-                    this.titleTextBox.Text = taskDetails.MessageInfo.EmailMessage;
-                    this.MailInfoText.Text = taskDetails.MessageInfo.EmailTitle;
+                    this.MailInfoText.Text = taskDetails.MessageInfo.EmailMessage;
+                    this.titleTextBox.Text = taskDetails.MessageInfo.EmailTitle;
                 }
                 this.taskDetails = taskDetails;
                 this.updateListView(fileList);
@@ -127,31 +127,17 @@ namespace SendEmail
             
             //检查主题不能为空
             var titleText = this.titleTextBox.Text;
-            if (string.IsNullOrEmpty(titleText))
-            {
-                MessageBox.Show("邮件标题不能为空");
-                UtilTools.SetAllControlsEnabled(this,true);// 启用控件
-                return;
-            }
-            
             //内容不能为空
             var mailInfoText = this.MailInfoText.Text;
-            if (string.IsNullOrEmpty(mailInfoText))
-            {
-                MessageBox.Show("邮件内容不能为空");
-                UtilTools.SetAllControlsEnabled(this,true);// 启用控件
-                return;
-            }
-            
             //发送人不能为空
             var toUserAddress = this.toUserAddressList.Text;
-            if (string.IsNullOrEmpty(toUserAddress)  || addToUserSet.Count==0)
+            var userInputResult = checkUserInput(titleText, mailInfoText, toUserAddress);
+            if (userInputResult.Length > 0)
             {
-                MessageBox.Show("收件人不能为空");
-                UtilTools.SetAllControlsEnabled(this,true);// 启用控件
+                MessageBox.Show(userInputResult);
                 return;
             }
-            
+
             //发送邮件,此时无附件
             HashSet<String> addToUserList = addToUserSet.ToHashSet();//获取发送列表
             HashSet<String> addCCUserList = addCCUserSet.ToHashSet();//获取抄送列表
@@ -194,8 +180,31 @@ namespace SendEmail
             // }
             UtilTools.SetAllControlsEnabled(this,true);// 启用控件
             taskDetailsForm.Show();
-            taskDetailsForm.updateTaskDetail(taskDetails);
+            taskDetailsForm.updateTaskDetailsToView();
             this.Hide();
+        }
+
+        private string checkUserInput(String titleText,String mailInfoText,string toUserAddress)
+        {
+            string result = "";
+            if (string.IsNullOrEmpty(titleText))
+            {
+                result += "邮件标题不能为空 /n";
+          
+            }
+            //内容不能为空
+            if (string.IsNullOrEmpty(mailInfoText))
+            {
+                result += "邮件内容不能为空 /n";
+            }
+            
+            //发送人不能为空
+            if (string.IsNullOrEmpty(toUserAddress)  || addToUserSet.Count==0)
+            {
+                result += "收件人不能为空 /n";
+            }
+            UtilTools.SetAllControlsEnabled(this,true);// 启用控件
+            return result;
         }
 
         /// <summary>
@@ -250,8 +259,20 @@ namespace SendEmail
         private void MailInfo_FormClosed(object sender, FormClosedEventArgs e)
         {
             // Application.Exit();
+            //检查主题不能为空
+            var titleText = this.titleTextBox.Text;
+            //内容不能为空
+            var mailInfoText = this.MailInfoText.Text;
+            //发送人不能为空
+            var toUserAddress = this.toUserAddressList.Text;
+            var userInputResult = checkUserInput(titleText, mailInfoText, toUserAddress);
+            if (userInputResult.Length > 0 || taskDetails.MessageInfo is null)
+            {
+                TaskDetails.TaskFactory.Instance.RemoveTaskDetail(taskDetails.TaskNumber);
+            }
             this.Hide();
             taskDetailsForm.Show();
+            taskDetailsForm.updateTaskDetailsToView();
         }
 
         /// <summary>
@@ -301,7 +322,6 @@ namespace SendEmail
         private void BatchSendingForm_Load(object sender, EventArgs e)
         {
             // throw new System.NotImplementedException();
-            
         }
     }
 }
