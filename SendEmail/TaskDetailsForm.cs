@@ -121,13 +121,14 @@ namespace SendEmail
             var taskDetailsList = TaskDetails.TaskFactory.Instance.GetAllTaskDetails();
             foreach (var taskDetails in taskDetailsList)
             {
+                int emailIndex = 1;
                 if (taskDetails.AttachmentList != null && taskDetails.AttachmentList.Count > 0)
                 {
                     foreach (var fileDetails in taskDetails.AttachmentList)
                     {
                         string messageStr = "";
                         //构建邮件并发送
-                        var mailMessage = taskDetails.MessageInfo.getMailMessage(fileDetails);
+                        var mailMessage = taskDetails.MessageInfo.getMailMessage(fileDetails,emailIndex);
                         if (mailMessage == null)
                         {
                             this.Invoke((MethodInvoker)delegate { this.updateTaskDetailsToView(); });
@@ -146,6 +147,7 @@ namespace SendEmail
                             }
                             else
                             {
+                                ++emailIndex;
                                 fileDetails.FileStatus = "OK";
                             }
                             this.Invoke((MethodInvoker)delegate { this.updateTaskDetailsToView(); });
@@ -154,7 +156,7 @@ namespace SendEmail
                 }
                 else
                 {
-                    var mailMessage = taskDetails.MessageInfo.getMailMessage();
+                    var mailMessage = taskDetails.MessageInfo.getMailMessage(emailIndex);
                     string messageStr = await Task.Run(() => new MailUtils().sendEmail(this.smtpClient,mailMessage));
                     if (messageStr=="Success")
                     {

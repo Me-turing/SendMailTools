@@ -188,6 +188,22 @@ namespace SendEmail.Util
             }
             return localPart;
         }
+        public static string SanitizeEmailToLocalPart(HashSet<string> emailSet)
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var email in emailSet)
+            {
+                string localPart = email.Split('@')[0];
+                foreach (var invalidChar in InvalidChars)
+                {
+                    localPart = localPart.Replace(invalidChar.ToString(), "_");  // 使用下划线替换无效字符
+                }
+                stringBuilder.Append(localPart + "/");
+            }
+            var emailStr = stringBuilder.ToString();
+            emailStr = emailStr.Substring(0, emailStr.Length - 1);
+            return emailStr;
+        }
         
         /// <summary>
         /// 创建子文件目录

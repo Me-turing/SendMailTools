@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Mail;
 using System.Net.Mime;
+using System.Text;
 using SendEmail.Util;
 
 namespace SendEmail.model
@@ -70,11 +71,11 @@ namespace SendEmail.model
         /// </summary>
         /// <param name="attachmentList"></param>
         /// <returns></returns>
-        public MailMessage getMailMessage(List<FileDetails> attachmentList)
+        public MailMessage getMailMessage(List<FileDetails> attachmentList,int emailIndex)
         {
             //构造
-            MailMessage mailMessage = getMailMessage();
-            
+            MailMessage mailMessage = getMailMessage(emailIndex);
+            var stringBuilder = new StringBuilder();
             //添加附件
             foreach (var fileDetails in attachmentList)
             {
@@ -82,6 +83,7 @@ namespace SendEmail.model
                 {
                     if (File.Exists(fileDetails.FilePath))
                     {
+                        stringBuilder.Append(fileDetails.FileName + "/");
                         Attachment attachment = new Attachment(fileDetails.FilePath, MediaTypeNames.Application.Octet);
                         ContentDisposition disposition = attachment.ContentDisposition;
                         disposition.CreationDate = File.GetCreationTime(fileDetails.FilePath);
@@ -91,6 +93,10 @@ namespace SendEmail.model
                     }
                 }
             }
+            var fileNames = stringBuilder.ToString();
+            fileNames = fileNames.Substring(0, fileNames.Length - 1);
+            mailMessage.Body = MagicVariable.ReplaceMagicValues(emailMessage, fileNames,
+                emailIndex.ToString(), UtilTools.SanitizeEmailToLocalPart(toEmailAddressList));
             return mailMessage;
         }
         
@@ -99,14 +105,15 @@ namespace SendEmail.model
         /// </summary>
         /// <param name="fileDetails"></param>
         /// <returns></returns>
-        public MailMessage getMailMessage(FileDetails fileDetails)
+        public MailMessage getMailMessage(FileDetails fileDetails,int emailIndex)
         {
             //构造
-            MailMessage mailMessage = getMailMessage();
-            
+            MailMessage mailMessage = getMailMessage(emailIndex);
             //添加附件
             if (!String.IsNullOrEmpty(fileDetails.FilePath) && File.Exists(fileDetails.FilePath))
             {
+                mailMessage.Body = MagicVariable.ReplaceMagicValues(emailMessage, fileDetails.FileName,
+                    emailIndex.ToString(), UtilTools.SanitizeEmailToLocalPart(toEmailAddressList));
                 Attachment attachment = new Attachment(fileDetails.FilePath, MediaTypeNames.Application.Octet);
                 ContentDisposition disposition = attachment.ContentDisposition;
                 disposition.CreationDate = File.GetCreationTime(fileDetails.FilePath);
@@ -126,7 +133,7 @@ namespace SendEmail.model
         /// 创建无附件邮件
         /// </summary>
         /// <returns></returns>
-        public MailMessage getMailMessage()
+        public MailMessage getMailMessage(int emailIndex)
         {
             //优先检查必须项目
             if (string.IsNullOrEmpty(fromEmailAddress)||UtilTools.checkListOrSetIsNull(toEmailAddressList)||
@@ -140,7 +147,7 @@ namespace SendEmail.model
             {
                 From = new MailAddress(fromEmailAddress),
                 Subject = emailTitle,
-                Body = emailMessage
+                Body = MagicVariable.ReplaceMagicValues(emailMessage,"",emailIndex.ToString(),UtilTools.SanitizeEmailToLocalPart(toEmailAddressList))
             };
 
             //添加发送人
