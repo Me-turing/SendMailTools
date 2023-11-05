@@ -246,7 +246,11 @@ namespace SendEmail
             var userInputResult = checkUserInput(titleText, mailInfoText, toUserAddress);
             if (userInputResult.Length > 0 || taskDetails.MessageInfo is null)
             {
-                TaskDetails.TaskFactory.Instance.RemoveTaskDetail(taskDetails.TaskNumber);
+                DialogResult result = MessageBox.Show(userInputResult + "\n 是否保存操作?", "是否保存?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (result == DialogResult.No)
+                {
+                    TaskDetails.TaskFactory.Instance.RemoveTaskDetail(taskDetails.TaskNumber);
+                }
             }
             this.Hide();
             taskDetailsForm.Show();

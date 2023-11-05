@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -130,30 +131,69 @@ namespace SendEmail.Util
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        public static (List<string> validEmails, List<string> invalidEmails) readAndValidateTxtFile(string filePath)
+        public static Dictionary<string, Dictionary<string, HashSet<string>>> ProcessEmailFile(string filePath)
         {
-            List<string> validEmails = new List<string>();
-            List<string> invalidEmails = new List<string>();
-
-            if (File.Exists(filePath))
+            var dictionary = new Dictionary<string, Dictionary<string, HashSet<string>>>();
+            foreach (var lineWithIndex in File.ReadLines(filePath).Select((line, index) => new { line, lineNumber = index + 1 }))
             {
-                foreach (string line in File.ReadLines(filePath))
+                string line = lineWithIndex.line; //当前内容
+                string lineNumberKey = lineWithIndex.lineNumber.ToString("D8"); //当前行号格式化为8位数
+
+                // 如果字典中没有这个键，则添加
+                if (!dictionary.ContainsKey(lineNumberKey))
                 {
-                    if (IsValidEmail(line))
+                    dictionary[lineNumberKey] = new Dictionary<string, HashSet<string>>
                     {
-                        validEmails.Add(line);
+                        ["toAddress"] = new HashSet<string>(),
+                        ["ccAddress"] = new HashSet<string>(),
+                        ["invalidAddress"] = new HashSet<string>(),
+                        ["titleStr"] = new HashSet<string>(),
+                        ["messageInfo"] = new HashSet<string>()
+                    };
+                }
+                var parts = line.Split(new string[] { "----" }, StringSplitOptions.None);
+                if (parts.Length == 4)
+                {
+                    var recipients = parts[0].Split(';');
+                    foreach (var recipient in recipients)
+                    {
+                        if (IsValidEmail(recipient))
+                        {
+                            dictionary[lineNumberKey]["toAddress"].Add(recipient);
+                        }
+                        else
+                        {
+                            dictionary[lineNumberKey]["invalidAddress"].Add(recipient);
+                        }
                     }
-                    else
+
+                    var ccs = parts[1].Split(';');
+                    foreach (var cc in ccs)
                     {
-                        invalidEmails.Add(line);
+                        if (IsValidEmail(cc))
+                        {
+                            dictionary[lineNumberKey]["ccAddress"].Add(cc);
+                        }
+                        else
+                        {
+                            dictionary[lineNumberKey]["invalidAddress"].Add(cc);
+                        }
+                    }
+
+                    var titleStr = parts[2];
+                    if (!string.IsNullOrEmpty(titleStr))
+                    {
+                        dictionary[lineNumberKey]["titleStr"].Add(titleStr);
+                    }
+                    
+                    var messageInfoStr = parts[3];
+                    if (!string.IsNullOrEmpty(messageInfoStr))
+                    {
+                        dictionary[lineNumberKey]["messageInfo"].Add(messageInfoStr);
                     }
                 }
             }
-            else
-            {
-                Console.WriteLine("文件不存在：" + filePath);
-            }
-            return (validEmails, invalidEmails);
+            return dictionary;
         }
         
         /// <summary>
@@ -236,7 +276,10 @@ namespace SendEmail.Util
                     Directory.CreateDirectory(destinationDirectory);
                 }
                 string destinationFilePath = Path.Combine(destinationDirectory, Path.GetFileName(sourceFilePath));
-                File.Move(sourceFilePath, destinationFilePath);
+                if (!File.Exists(destinationFilePath))
+                {
+                    File.Copy(sourceFilePath, destinationFilePath);
+                }
                 return true;
             }
             else

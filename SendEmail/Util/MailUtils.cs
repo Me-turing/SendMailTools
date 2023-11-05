@@ -59,8 +59,8 @@ namespace SendEmail.Util
                 {
                     return "消息不能为空!";
                 }
+                await Task.Delay(2000); // 延迟2秒
                 client.Send(message);
-                Thread.Sleep(1000);
                 return "Success";
             }
             catch (Exception ex)
