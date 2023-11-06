@@ -314,5 +314,10 @@ namespace SendEmail
                 }
             }
         }
+
+        private void TaskDetailsForm_Load(object sender, EventArgs e)
+        {
+            this.Text += Properties.Settings.Default.copyRight;
+        }
     }
 }

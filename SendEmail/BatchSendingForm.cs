@@ -303,7 +303,7 @@ namespace SendEmail
         /// <exception cref="NotImplementedException"></exception>
         private void BatchSendingForm_Load(object sender, EventArgs e)
         {
-            // throw new System.NotImplementedException();
+            this.Text += Properties.Settings.Default.copyRight;
         }
     }
 }

@@ -151,7 +151,7 @@
             this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
             this.Name = "LoginForm";
-            this.Text = "SendEmail v1.5           By.SEVENTEEN";
+            this.Text = "Send Email Tools";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.LoginForm_FormClosed);
             this.Load += new System.EventHandler(this.LoginForm_Load);
             this.groupBox1.ResumeLayout(false);

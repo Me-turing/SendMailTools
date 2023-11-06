@@ -100,6 +100,7 @@ namespace SendEmail
            this.userPwdTextBox.Text = Properties.Settings.Default.userPwd;
            this.protTextBox.Text = Properties.Settings.Default.prot;
            this.smtpAddressTextBox.Text =  Properties.Settings.Default.smtpAddress;
+           this.Text += Properties.Settings.Default.copyRight;
        }
     }
 }

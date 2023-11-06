@@ -213,8 +213,9 @@ namespace SendEmail
             this.Controls.Add(this.groupBox1);
             this.MaximizeBox = false;
             this.Name = "TaskDetailsForm";
-            this.Text = "MassSendingForm";
+            this.Text = "Task Details";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TaskDetailsForm_FormClosed);
+            this.Load += new System.EventHandler(this.TaskDetailsForm_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();

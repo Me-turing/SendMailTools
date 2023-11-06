@@ -69,5 +69,17 @@ namespace SendEmail.Properties {
                 this["userPwd"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("V2.0  By SEVENTEEN")]
+        public string copyRight {
+            get {
+                return ((string)(this["copyRight"]));
+            }
+            set {
+                this["copyRight"] = value;
+            }
+        }
     }
 }

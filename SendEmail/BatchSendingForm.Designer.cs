@@ -240,7 +240,7 @@ namespace SendEmail
             this.Controls.Add(this.titleTextBox);
             this.MaximizeBox = false;
             this.Name = "BatchSendingForm";
-            this.Text = "SendEmail v1.0           By.SEVENTEEN";
+            this.Text = "Email Info";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MailInfo_FormClosed);
             this.Load += new System.EventHandler(this.BatchSendingForm_Load);
             this.ResumeLayout(false);

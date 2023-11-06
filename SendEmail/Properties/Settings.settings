@@ -16,6 +16,9 @@
     <Setting Name="userPwd" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="copyRight" Type="System.String" Scope="User">
+      <Value Profile="(Default)">V2.0  By SEVENTEEN</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
 
