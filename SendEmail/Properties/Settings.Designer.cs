@@ -72,7 +72,7 @@ namespace SendEmail.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("V2.0  By SEVENTEEN")]
+        [global::System.Configuration.DefaultSettingValueAttribute("V2.1  By SEVENTEEN")]
         public string copyRight {
             get {
                 return ((string)(this["copyRight"]));
