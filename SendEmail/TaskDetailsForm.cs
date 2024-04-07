@@ -145,7 +145,7 @@ namespace SendEmail
                 Thread.Sleep(5000); //每5秒执行一次
             }
 
-            MessageBox.Show("开始发送邮件!");
+            // MessageBox.Show("开始发送邮件!");
             // 发送邮件
             var taskDetailsList = TaskDetails.TaskFactory.Instance.GetAllTaskDetails();
             foreach (var taskDetails in taskDetailsList)
@@ -157,7 +157,7 @@ namespace SendEmail
                     {
                         string messageStr = "";
                         //构建邮件并发送
-                        var mailMessage = taskDetails.MessageInfo.getMailMessage(fileDetails, emailIndex);
+                        var mailMessage = taskDetails.MessageInfo.getMailMessage(fileDetails,taskDetails.AttachmentList.Count,emailIndex);
                         if (mailMessage == null)
                         {
                             this.Invoke((MethodInvoker)delegate { this.updateTaskDetailsToView(); });
@@ -189,7 +189,7 @@ namespace SendEmail
                 {
                     if (taskDetails.MessageInfo != null)
                     {
-                        var mailMessage = taskDetails.MessageInfo.getMailMessage(emailIndex);
+                        var mailMessage = taskDetails.MessageInfo.getMailMessage(1,emailIndex);
                         string messageStr =
                             await Task.Run(() => new MailUtils().sendEmail(this.smtpClient, mailMessage));
                         if (messageStr == "Success")

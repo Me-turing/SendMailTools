@@ -31,7 +31,7 @@ namespace SendEmail.Util
             toEmailAddressList.Add(userAddressStr);
             var mailMessage = new MessageInfo(userAddressStr,toEmailAddressList,
                 null,"Test Email","如果您看到这条消息,意味着您的邮件配置一切正常.")
-                .getMailMessage(1);
+                .getMailMessage(1,1);
             var messageStr = sendEmail(client,mailMessage);
             if (messageStr.Result.Equals("Success"))
             {
