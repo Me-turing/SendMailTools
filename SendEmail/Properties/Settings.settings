@@ -17,7 +17,7 @@
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="copyRight" Type="System.String" Scope="User">
-      <Value Profile="(Default)">V2.1  By SEVENTEEN</Value>
+      <Value Profile="(Default)">V2.2  By SEVENTEEN</Value>
     </Setting>
   </Settings>
 </SettingsFile>
