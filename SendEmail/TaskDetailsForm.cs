@@ -128,7 +128,7 @@ namespace SendEmail
             //禁用所有的控件
             UtilTools.SetAllControlsEnabled(this, false); // 禁用控件
             var @isisTimedSending = this.isTimedSending.Checked;
-            DateTime beginTime = DateTime.ParseExact(timedSendingDate.Value.ToString(), "yyyy/M/d HH:mm:ss", null);
+            DateTime beginTime = DateTime.Parse(timedSendingDate.Value.ToString());
             if (isisTimedSending)
             {
                 MessageBox.Show("已开启定时发送功能,邮件将在: " + timedSendingDate.Value.ToString() + " 之后发送!");

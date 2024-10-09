@@ -97,6 +97,7 @@ namespace SendEmail.model
             fileNames = fileNames.Substring(0, fileNames.Length - 1);
             mailMessage.Body = MagicVariable.ReplaceMagicValues(emailMessage, fileNames,
                 emailCount.ToString(),emailIndex.ToString(), UtilTools.SanitizeEmailToLocalPart(toEmailAddressList));
+            mailMessage.BodyEncoding = Encoding.UTF8;
             return mailMessage;
         }
         
@@ -119,6 +120,7 @@ namespace SendEmail.model
                 disposition.CreationDate = File.GetCreationTime(fileDetails.FilePath);
                 disposition.ModificationDate = File.GetLastWriteTime(fileDetails.FilePath);
                 disposition.ReadDate = File.GetLastAccessTime(fileDetails.FilePath);
+                mailMessage.BodyEncoding = Encoding.UTF8;
                 mailMessage.Attachments.Add(attachment);
             }
             else
